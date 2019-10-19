@@ -19,3 +19,19 @@ jobs:
         dotnet-version: 3.0.100
     - name: Build with dotnet
       run: dotnet build --configuration Release
+
+  publish:
+    runs-on: windows-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.0.100
+    - name: Pack
+      run: dotnet pack -c Release --version-suffix preview-${{ github.sha }}
+    - name: Add NuGet source
+      run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/mysql-net/index.json" -UserName bgrainger -Password ${{ secrets.GITHUB_TOKEN }}
+    - name: Publish to GPR
+      run: nuget push src\PlaygroundLibrary\bin\Release\PlaygroundLibrary.0.1.0-preview-${{ github.sha }}.nupkg -Source GPR
