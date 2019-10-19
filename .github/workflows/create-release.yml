@@ -9,7 +9,6 @@ jobs:
 
   publish:
     runs-on: windows-latest
-    needs: build
     steps:
     - uses: actions/checkout@v1
     - name: Setup .NET Core
