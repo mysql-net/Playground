@@ -31,6 +31,8 @@ jobs:
         dotnet-version: 3.0.100
     - name: Pack
       run: dotnet pack -c Release --version-suffix preview-${{ github.sha }}
+    - name: Install NuGet
+      run: choco install nuget.commandline
     - name: Add NuGet source
       run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/mysql-net/index.json" -UserName bgrainger -Password ${{ secrets.GITHUB_TOKEN }}
     - name: Publish to GPR
