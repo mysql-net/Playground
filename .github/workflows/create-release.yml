@@ -22,6 +22,7 @@ jobs:
     - name: Add NuGet source
       run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/mysql-net/index.json" -UserName bgrainger -Password ${{ secrets.GITHUB_TOKEN }}
     - name: Publish to GPR
+      shell: pwsh
       run: |
         $tag = "${{ github.ref }}".Substring(10)
         nuget push src\PlaygroundLibrary\bin\Release\PlaygroundLibrary.$tag.nupkg -Source GPR
