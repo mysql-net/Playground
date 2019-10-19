@@ -6,14 +6,32 @@ on:
 name: Create Release
 
 jobs:
-  build:
+
+  publish:
+    runs-on: windows-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.0.100
+    - name: Pack
+      run: dotnet pack -c Release
+    - name: Install NuGet
+      run: choco install nuget.commandline
+    - name: Add NuGet source
+      run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/mysql-net/index.json" -UserName bgrainger -Password ${{ secrets.GITHUB_TOKEN }}
+    - name: Publish to GPR
+      run: nuget push src\PlaygroundLibrary\bin\Release\PlaygroundLibrary.${{ github.ref }}.nupkg -Source GPR
+
+  release:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@master
       - name: Create Release
-        id: create_release
         uses: actions/create-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
