@@ -30,8 +30,8 @@ jobs:
     - name: Build with dotnet
       run: |
         STEP_START=$(date +%s)
-        buildevents cmd ${{ github.repository }}:${{ github.run_id }} build dotnet build --configuration Release
-        buildevents step ${{ github.repository }}:${{ github.run_id }} build $STEP_START
+        $GOPATH/bin/buildevents cmd ${{ github.repository }}:${{ github.run_id }} build dotnet build --configuration Release
+        $GOPATH/bin/buildevents step ${{ github.repository }}:${{ github.run_id }} build $STEP_START
     - name: Finish build
       run: |
-        buildevents build ${{ github.repository }}:${{ github.run_id }} $BUILD_START success
+        $GOPATH/bin/buildevents build ${{ github.repository }}:${{ github.run_id }} $BUILD_START success
