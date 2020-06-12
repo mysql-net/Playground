@@ -27,11 +27,16 @@ jobs:
         dotnet-version: 3.1.301
     - name: Install buildevents
       run: go get github.com/bgrainger/buildevents/
-    - name: Build with dotnet
+    - name: .NET Restore
       run: |
         STEP_START=$(date +%s)
-        /home/runner/go/bin/buildevents cmd ${{ github.repository }}:${{ github.run_id }} build dotnet build --configuration Release
+        /home/runner/go/bin/buildevents cmd ${{ github.repository }}:${{ github.run_id }} build build -- dotnet restore
         /home/runner/go/bin/buildevents step ${{ github.repository }}:${{ github.run_id }} build $STEP_START
+    - name: .NET Build
+      run: |
+        STEP_START=$(date +%s)
+        /home/runner/go/bin/buildevents cmd ${{ github.repository }}:${{ github.run_id }} restore restore -- dotnet build --configuration Release --no-restore
+        /home/runner/go/bin/buildevents step ${{ github.repository }}:${{ github.run_id }} restore $STEP_START
     - name: Finish build
       run: |
         /home/runner/go/bin/buildevents build ${{ github.repository }}:${{ github.run_id }} $BUILD_START success
