@@ -31,13 +31,13 @@ jobs:
     - name: .NET Restore
       run: |
         STEP_START=$(date +%s)
-        /home/runner/go/bin/buildevents cmd ${{ github.repository }}:${{ github.run_id }} ${{ github.action }} build -- dotnet restore
-        /home/runner/go/bin/buildevents step ${{ github.repository }}:${{ github.run_id }} ${{ github.action }} $STEP_START build
+        /home/runner/go/bin/buildevents cmd ${{ github.repository }}:${{ github.run_id }} ${{ github.action }} restore -- dotnet restore
+        /home/runner/go/bin/buildevents step ${{ github.repository }}:${{ github.run_id }} ${{ github.action }} $STEP_START restore
     - name: .NET Build
       run: |
         STEP_START=$(date +%s)
-        /home/runner/go/bin/buildevents cmd ${{ github.repository }}:${{ github.run_id }} ${{ github.action }} restore -- dotnet build --configuration Release --no-restore
-        /home/runner/go/bin/buildevents step ${{ github.repository }}:${{ github.run_id }} ${{ github.action }} $STEP_START restore
+        /home/runner/go/bin/buildevents cmd ${{ github.repository }}:${{ github.run_id }} ${{ github.action }} build -- dotnet build --configuration Release --no-restore
+        /home/runner/go/bin/buildevents step ${{ github.repository }}:${{ github.run_id }} ${{ github.action }} $STEP_START build
     - name: Finish build
       run: |
         /home/runner/go/bin/buildevents build ${{ github.repository }}:${{ github.run_id }} $(cat ${{ runner.temp }}/build_start) success
