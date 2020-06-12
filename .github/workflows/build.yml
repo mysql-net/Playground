@@ -5,6 +5,10 @@ on:
     branches:
       - '*'
 
+env:
+  BUILDEVENT_APIKEY: ${{ secrets.HONEYCOMB_APIKEY }}
+  BUILD_START: $(date +%s)
+
 jobs:
   build:
 
@@ -24,4 +28,10 @@ jobs:
     - name: Install buildevents
       run: go get github.com/bgrainger/buildevents/
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: |
+        STEP_START=$(date +%s)
+        buildevents cmd ${{ github.repository }}:${{ github.run_id }} build dotnet build --configuration Release
+        buildevents step ${{ github.repository }}:${{ github.run_id }} build $STEP_START
+    - name: Finish build
+      run: |
+        buildevents build ${{ github.repository }}:${{ github.run_id }} $BUILD_START success
