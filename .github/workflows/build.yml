@@ -19,6 +19,7 @@ jobs:
 
     steps:
     - run: export BUILD_START=$(date +%s)
+      if: runner.os == 'Linux'
     - uses: actions/setup-go@v2
     - uses: actions/checkout@v1
     - name: Setup .NET Core
